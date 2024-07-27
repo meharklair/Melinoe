@@ -1,10 +1,9 @@
 import yara
 
-
 def main():
-    rules = yara.compile(filepath='Test_rule.yar')
+    rules = yara.compile(filepath='injection_rules.yar')
 
-    matches = rules.match('Test.txt')
+    matches = rules.match('d:\coding projects\malware development\win32api learning\output\process_injection_OHMYGAHHH.exe')
 
     print(matches)
 
