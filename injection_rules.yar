@@ -16,8 +16,6 @@ What is needed for shellcode injection
 
 OpenProcess -> VirtualAllocEx -> WriteProcessMemory -> VirtualProtectEx (optional) -> CreateRemoteThreadEx
 
-
-
 */
 
 
@@ -53,9 +51,24 @@ rule winapi_injection
     
 }
 
-rule silly
+/*
+NtOpenProcess -> > NTAllocatevirtualMemory -> NtWriteVirtualMemory -> NtCreateThreadEx
+*/
+
+rule NTAPI_injection
 {
-    condition: true
+    meta: 
+
+    description = "Scans for needed imports and commands needed for NTAPI injection"
+
+    strings:
+        $write = "NtWriteVirtualMemory"
+        $threadEx = "NtCreateThreadEx"
+
+    condition:
+        // magic for executables
+        0x5a4d and $write and $threadEx
+
 }
 
 
