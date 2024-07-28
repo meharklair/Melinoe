@@ -19,7 +19,7 @@ OpenProcess -> VirtualAllocEx -> WriteProcessMemory -> VirtualProtectEx (optiona
 */
 
 
-rule winapi_injection
+rule win32api_injection
 {
      meta:
 
