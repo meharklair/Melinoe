@@ -10,27 +10,42 @@ class Scanner:
 
     def compile_rules(self):
         try:
-            print('attempting to compile yara rules...')
+            print('attempting to compile yara rules... ٩(•̤̀ᵕ•̤́๑)ᵒᵏ\n')
 
-            start = time.time()
+            start = time.perf_counter()
             self.rules = yara.compile(self.rules_path)
-            end = time.time()
+            end = time.perf_counter()
 
-            print(f'yara rules compilied in {round(end - start, 9)} seconds')
+            print('yara rules have successfully compiled!ヽ(•‿•)ノ\n')
 
-        except:
-            print('invalid yara file path')
-            print('exiting....')
+            print('Time stops for no one...')
+            print(f'yara rules compilied in {round(end - start, 9)} seconds\n')
+
+        except yara.SyntaxError:
+
+            print('The file provided is not a yara file')
+            print('exiting...')
             exit()
-    
 
+        except yara.Error:
 
+            print('No such file exists')
+            print('exiting...')
+            exit()
+        
 
     def scan_target(self):
+
         if (os.path.isfile(self.target_path)):
             self.scan_single(self.target_path)
-        else:
+
+        elif (os.path.isdir(self.target_path)):
             self.scan_directory()
+
+        else:
+            print('target file or folder does not exist')
+            print('exiting...')
+            exit()
 
         
     def scan_single(self, target):
@@ -48,7 +63,7 @@ class Scanner:
 
     
     def scan_directory(self):
-        
+
         # https://stackoverflow.com/questions/16953842/using-os-walk-to-recursively-traverse-directories-in-python
         for root, dirs, files in os.walk(self.target_path):
             path = root.split(os.sep)
@@ -62,14 +77,15 @@ class Scanner:
 def print_banner():
 
     banner = r"""
-     ______   _______  _______ _________           _________ _______    _______  _______  _______  _        _______  _______ 
-    (  __  \ (  ____ \(  ___  )\__   __/|\     /|  \__   __/(  ___  )  (  ____ \(  ____ )(  ___  )( (    /|(  ___  )(  ____ \
-    | (  \  )| (    \/| (   ) |   ) (   | )   ( |     ) (   | (   ) |  | (    \/| (    )|| (   ) ||  \  ( || (   ) || (    \/
-    | |   ) || (__    | (___) |   | |   | (___) |     | |   | |   | |  | |      | (____)|| |   | ||   \ | || |   | || (_____ 
-    | |   | ||  __)   |  ___  |   | |   |  ___  |     | |   | |   | |  | |      |     __)| |   | || (\ \) || |   | |(_____  )
-    | |   ) || (      | (   ) |   | |   | (   ) |     | |   | |   | |  | |      | (\ (   | |   | || | \   || |   | |      ) |
-    | (__/  )| (____/\| )   ( |   | |   | )   ( |     | |   | (___) |  | (____/\| ) \ \__| (___) || )  \  || (___) |/\____) |
-    (______/ (_______/|/     \|   )_(   |/     \|     )_(   (_______)  (_______/|/   \__/(_______)|/    )_)(_______)\_______)
+     ______   _______  _______ _________           _________ _______    _______           _______  _______  _        _______  _______ 
+    (  __  \ (  ____ \(  ___  )\__   __/|\     /|  \__   __/(  ___  )  (  ____ \|\     /|(  ____ )(  ___  )( (    /|(  ___  )(  ____ \
+    | (  \  )| (    \/| (   ) |   ) (   | )   ( |     ) (   | (   ) |  | (    \/| )   ( || (    )|| (   ) ||  \  ( || (   ) || (    \/
+    | |   ) || (__    | (___) |   | |   | (___) |     | |   | |   | |  | |      | (___) || (____)|| |   | ||   \ | || |   | || (_____ 
+    | |   | ||  __)   |  ___  |   | |   |  ___  |     | |   | |   | |  | |      |  ___  ||     __)| |   | || (\ \) || |   | |(_____  )
+    | |   ) || (      | (   ) |   | |   | (   ) |     | |   | |   | |  | |      | (   ) || (\ (   | |   | || | \   || |   | |      ) |
+    | (__/  )| (____/\| )   ( |   | |   | )   ( |     | |   | (___) |  | (____/\| )   ( || ) \ \__| (___) || )  \  || (___) |/\____) |
+    (______/ (_______/|/     \|   )_(   |/     \|     )_(   (_______)  (_______/|/     \||/   \__/(_______)|/    )_)(_______)\_______)
+                                                                                                                                  
                                                                                                                          
     """
 
@@ -81,8 +97,8 @@ def print_banner():
 
 def get_input():
 
-    yara_path = input('Enter the path of your yara file: \n')
-    file_path = input('Enter the path to the directory or file: \n')
+    yara_path = input('Enter the path to your yara file: \n')
+    file_path = input('Enter the path to the directory or file you would like to scan: \n')
     return (yara_path,file_path)
 
 def main():
@@ -94,8 +110,7 @@ def main():
     scanner = Scanner(yara_path, file_path, None)
 
     scanner.compile_rules()
-    
-    print('yara rules have successfully compiled!')
+
 
     scanner.scan_target()
         
