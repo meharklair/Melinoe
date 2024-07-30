@@ -1,4 +1,4 @@
-import yara, time, os
+import yara, time, os, random
 
 class Scanner:
 
@@ -18,7 +18,7 @@ class Scanner:
 
             print('yara rules have successfully compiled!ヽ(•‿•)ノ\n')
 
-            print('Time stops for no one...')
+            print('Time Cannot Be Stopped...')
             print(f'yara rules compilied in {round(end - start, 9)} seconds\n')
 
         except yara.SyntaxError:
@@ -36,6 +36,12 @@ class Scanner:
 
     def scan_target(self):
 
+        print('beginning scan...')
+
+
+
+        start = time.perf_counter()
+
         if (os.path.isfile(self.target_path)):
             self.scan_single(self.target_path)
 
@@ -47,21 +53,21 @@ class Scanner:
             print('exiting...')
             exit()
 
+        end = time.perf_counter()
+
+        print('Scan completed!!\n')
+
+        print('I am Time itself. What are you?')
+        print(f'Scan finished in {round(end - start, 9)} seconds\n')
         
+
+
     def scan_single(self, target):
-
-        # error catching
         
-        try:
-            matches = self.rules.match(target)
-
-        except:
-            print('invalid file path')
-
+        matches = self.rules.match(target)
         for item in matches:
-            print(f'MAY CONTAIN MALWARE: "{target}" Contains {item}')
+            print(f"MALWARE DETECTED!!!: '{target}' -> {item} DETECTED {pick_sad_face()}")
 
-    
     def scan_directory(self):
 
         # https://stackoverflow.com/questions/16953842/using-os-walk-to-recursively-traverse-directories-in-python
@@ -73,6 +79,10 @@ class Scanner:
                 full_path = os.path.join(root,file)
                 self.scan_single(full_path)
                 
+def pick_sad_face():
+    faces = ['( ・⌓・｀)', '(つ﹏<。)', '( ཀ ʖ̯ ཀ)']
+    return random.choice(faces)
+
 
 def print_banner():
 
@@ -111,8 +121,9 @@ def main():
 
     scanner.compile_rules()
 
-
     scanner.scan_target()
+
+    print('Return To Shadow, Now!!')
         
     # rules = yara.compile(filepath='injection_rules.yar')
     # matches = rules.match('d:\coding projects\malware development\win32api learning\output')
