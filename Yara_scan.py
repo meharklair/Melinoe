@@ -1,7 +1,6 @@
 import yara, time, os, random
 
 class Scanner:
-
     def __init__ (self, rules_path, target_path, rules):
         self.rules_path = rules_path
         self.target_path = target_path
@@ -35,10 +34,10 @@ class Scanner:
         
 
     def scan_target(self):
+        '''middle man function for scanning and delegates to scan_directory() or scan_single()
+        '''
 
         print('beginning scan...')
-
-
 
         start = time.perf_counter()
 
@@ -114,22 +113,12 @@ def get_input():
 def main():
 
     print_banner()
-
     yara_path,file_path = get_input()
-
     scanner = Scanner(yara_path, file_path, None)
-
     scanner.compile_rules()
-
     scanner.scan_target()
 
     print('Return To Shadow, Now!!')
-        
-    # rules = yara.compile(filepath='injection_rules.yar')
-    # matches = rules.match('d:\coding projects\malware development\win32api learning\output')
-    #Nt_check = rules.match('D:\coding projects\maldev crow\TAPI Injection\output\main.exe')
-    # print(f"win32 api check {matches}")
-    #print(f"NT check {Nt_check}")
 
 if __name__ == '__main__':
     main()
