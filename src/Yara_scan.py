@@ -2,13 +2,17 @@ import os
 import yara
 import time
 import click
-import random
-from logging.logging import Logging
+from logging.logging import Logging, Formatting
 
 log = Logging()
-version = "0.0.1" 
+fmt = Formatting()
+current_version = "0.1.1" 
 
 class Scanner:
+    """
+    Main scanning component of the program
+    """
+
     def __init__ (self, rules_path, target_path, rules):
         self.rules = rules
         self.rules_path = rules_path
@@ -22,20 +26,14 @@ class Scanner:
             end = time.perf_counter()
             log.okay(f'YARA rules have successfully compiled in {round(end - start, 9)} seconds! ヽ(•‿•)ノ')
             log.misc('Time cannot be stopped...')
-
         except yara.SyntaxError:
             log.warn('The file provided is not a YARA file, exiting...')
             exit()
-
         except yara.Error:
             log.warn('No such file exists, exiting...')
             exit()
 
     def scan_target(self):
-        """
-        Middle man function for scanning and delegates to scan_directory() or scan_single()
-        """
-
         log.info('Beginning scan...')
         start = time.perf_counter()
         if (os.path.isfile(self.target_path)):
@@ -52,7 +50,7 @@ class Scanner:
     def scan_single(self, target):
         matches = self.rules.match(target)
         for item in matches:
-            log.okay(f'MALWARE DETECTED! using "{target}" -> {item} {pick_sad_face()}')
+            log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
 
     def scan_directory(self):
         # https://stackoverflow.com/questions/16953842/using-os-walk-to-recursively-traverse-directories-in-python
@@ -63,26 +61,6 @@ class Scanner:
                # print(len(path) * '---', file)
                 full_path = os.path.join(root,file)
                 self.scan_single(full_path)
-                
-def pick_sad_face() -> None:
-    faces = ['( ・⌓・｀)', '(つ﹏<。)', '( ཀ ʖ̯ ཀ)']
-    return random.choice(faces)
-
-def print_banner() -> None:
-    banner = rf"""
-     ______   _______  _______ _________           _________ _______    _______           _______  _______  _        _______  _______ 
-    (  __  \ (  ____ \(  ___  )\__   __/|\     /|  \__   __/(  ___  )  (  ____ \|\     /|(  ____ )(  ___  )( (    /|(  ___  )(  ____ \
-    | (  \  )| (    \/| (   ) |   ) (   | )   ( |     ) (   | (   ) |  | (    \/| )   ( || (    )|| (   ) ||  \  ( || (   ) || (    \/
-    | |   ) || (__    | (___) |   | |   | (___) |     | |   | |   | |  | |      | (___) || (____)|| |   | ||   \ | || |   | || (_____ 
-    | |   | ||  __)   |  ___  |   | |   |  ___  |     | |   | |   | |  | |      |  ___  ||     __)| |   | || (\ \) || |   | |(_____  )
-    | |   ) || (      | (   ) |   | |   | (   ) |     | |   | |   | |  | |      | (   ) || (\ (   | |   | || | \   || |   | |      ) |
-    | (__/  )| (____/\| )   ( |   | |   | )   ( |     | |   | (___) |  | (____/\| )   ( || ) \ \__| (___) || )  \  || (___) |/\____) |
-    (______/ (_______/|/     \|   )_(   |/     \|     )_(   (_______)  (_______/|/     \||/   \__/(_______)|/    )_)(_______)\_______)
-    
-    @maywhale, maywhale.net, maywhale@sigma.com
-    v{version}
-    """
-    print(banner)
 
 @click.command(no_args_is_help = True)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
@@ -92,10 +70,10 @@ def print_banner() -> None:
 def main(version, file, directory) -> None:
 
     if version:
-        print_banner()
+        fmt.print_banner(current_version)
 
     if file and directory:
-        print_banner()
+        fmt.print_banner(current_version)
         scanner = Scanner(file, directory, None)
         scanner.compile_rules()
         scanner.scan_target()

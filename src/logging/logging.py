@@ -1,5 +1,33 @@
+import random
 from datetime import datetime
 from colorama import Fore, Style
+
+class Formatting:
+    """
+    A miscellaneous class for aesthetics
+    """
+    
+    @staticmethod
+    def pick_sad_face() -> None:
+        faces = ['( ・⌓・｀)', '(つ﹏<。)', '( ཀ ʖ̯ ཀ)']
+        return random.choice(faces)
+
+    @staticmethod
+    def print_banner(version: str) -> None:
+        banner = rf"""
+         ______   _______  _______ _________           _________ _______    _______           _______  _______  _        _______  _______ 
+        (  __  \ (  ____ \(  ___  )\__   __/|\     /|  \__   __/(  ___  )  (  ____ \|\     /|(  ____ )(  ___  )( (    /|(  ___  )(  ____ \
+        | (  \  )| (    \/| (   ) |   ) (   | )   ( |     ) (   | (   ) |  | (    \/| )   ( || (    )|| (   ) ||  \  ( || (   ) || (    \/
+        | |   ) || (__    | (___) |   | |   | (___) |     | |   | |   | |  | |      | (___) || (____)|| |   | ||   \ | || |   | || (_____ 
+        | |   | ||  __)   |  ___  |   | |   |  ___  |     | |   | |   | |  | |      |  ___  ||     __)| |   | || (\ \) || |   | |(_____  )
+        | |   ) || (      | (   ) |   | |   | (   ) |     | |   | |   | |  | |      | (   ) || (\ (   | |   | || | \   || |   | |      ) |
+        | (__/  )| (____/\| )   ( |   | |   | )   ( |     | |   | (___) |  | (____/\| )   ( || ) \ \__| (___) || )  \  || (___) |/\____) |
+        (______/ (_______/|/     \|   )_(   |/     \|     )_(   (_______)  (_______/|/     \||/   \__/(_______)|/    )_)(_______)\_______)
+        
+        @maywhale, maywhale.net, maywhale@sigma.com
+        v{version}
+        """
+        print(banner)
 
 class Logging:
     """
