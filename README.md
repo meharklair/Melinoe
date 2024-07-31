@@ -1,5 +1,5 @@
 # Yara_scanner
-Creating a scanner for malware within files using yara.
+Creating a malware scanning tool that so far uses just yara.
 
 Installation:
 
