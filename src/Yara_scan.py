@@ -1,4 +1,8 @@
-import yara, time, os, random
+import os
+import yara
+import time
+import click
+import random
 from logging.logging import Logging
 
 log = Logging()
@@ -11,13 +15,13 @@ class Scanner:
 
     def compile_rules(self):
         try:
-            log.info('attempting to compile yara rules... ٩(•̤̀ᵕ•̤́๑)ᵒᵏ\n')
+            log.info('attempting to compile yara rules... ٩(•̤̀ᵕ•̤́๑)ᵒᵏ')
             start = time.perf_counter()
             self.rules = yara.compile(self.rules_path)
             end = time.perf_counter()
-            log.okay('yara rules have successfully compiled!ヽ(•‿•)ノ\n')
+            log.okay('yara rules have successfully compiled!ヽ(•‿•)ノ')
             log.misc('time cannot be stopped...')
-            log.info(f'yara rules compilied in {round(end - start, 9)} seconds\n')
+            log.info(f'yara rules compilied in {round(end - start, 9)} seconds')
 
         except yara.SyntaxError:
             log.warn('the file provided is not a yara file, exiting...')
@@ -43,9 +47,9 @@ class Scanner:
             log.warn('target file or folder does not exist, exiting...')
             exit()
         end = time.perf_counter()
-        log.okay('scan completed!\n')
+        log.okay('scan completed!')
         log.misc('i am time itself. what are you?')
-        log.info(f'Scan finished in {round(end - start, 9)} seconds\n')
+        log.info(f'Scan finished in {round(end - start, 9)} seconds')
         
     def scan_single(self, target):
         matches = self.rules.match(target)
@@ -81,17 +85,27 @@ def print_banner():
     time.sleep(1)
 
 def get_input():
-    yara_path = input('[>] enter the path to your yara file: \n')
-    file_path = input('[>] enter the path to the directory or file you would like to scan: \n')
+    yara_path = input('[>] enter the path to your yara file: ')
+    file_path = input('[>] enter the path to the directory or file you would like to scan: ')
     return (yara_path,file_path)
 
-def main():
-    print_banner()
-    yara_path,file_path = get_input()
-    scanner = Scanner(yara_path, file_path, None)
-    scanner.compile_rules()
-    scanner.scan_target()
-    log.misc('return to shadow, now!')
+@click.command(no_args_is_help = True)
+@click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
+@click.option("-f", "--file", help="The yara rule file with which to scan", required=False)
+@click.option("-d", "--directory", help="The directory you wish to scan", default=".", required=False)
+
+def main(version, file, directory) -> None:
+
+    if version:
+        print_banner()
+        log.info(f'version {version}')
+
+    if file and directory:
+        print_banner()
+        scanner = Scanner(file, directory, None)
+        scanner.compile_rules()
+        scanner.scan_target()
+        log.misc('return to shadow, now!')
 
 if __name__ == '__main__':
     main()
