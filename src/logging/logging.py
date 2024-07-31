@@ -2,7 +2,6 @@ from datetime import datetime
 from colorama import Fore, Style
 
 class Logging:
-
     """
     Logging functions for logging purposes
     """
