@@ -20,14 +20,27 @@ class Scanner:
         self.target_path = target_path
 
     def download_database(self):
-        # add timing of how long the compilation took
-        urllib.request.urlretrieve("https://bazaar.abuse.ch/export/txt/sha256/full/", "Database_file/database.zip")
+        log.info('Attempting to download database...')
+        start = time.perf_counter()
+        urllib.request.urlretrieve("https://bazaar.abuse.ch/export/txt/sha256/full/","src\Database\database.zip")
+        end = time.perf_counter()
+        log.info(f'Download completed in {round(end - start, 9)} seconds!')
         self.unzip()
 
     def unzip(self):
-        with zipfile.ZipFile('Database_file/database.zip', 'r') as zip_ref:
-            zip_ref.extractall('Database_file')
-
+        with zipfile.ZipFile('src\Database\database.zip', 'r') as zip_ref:
+            zip_ref.extractall('src\Database')
+            
+    def compute_file_hash(self, file_path, algorithm='sha256'):
+        """Compute the hash of a file using the specified algorithm."""
+        hash_func = hashlib.new(algorithm)
+    
+        with open(file_path, 'rb') as file:
+        # Read the file in chunks of 8192 bytes
+            while chunk := file.read(8192):
+                hash_func.update(chunk)
+    
+        return hash_func.hexdigest()
     def scan_target(self):
         log.info('Beginning scan...')
         start = time.perf_counter()
@@ -43,8 +56,8 @@ class Scanner:
         log.misc('I am time itself. What are you?')
         
     def scan_single(self, target):
-        sha256_hash = hashlib.sha256(target)
-        with open('database.txt','r') as file:
+        sha256_hash = self.compute_file_hash(target) + '\n'
+        with open("src\\Database\\full_sha256.txt",'r') as file:
             data_base = file.readlines()
             if sha256_hash in data_base:
                 log.okay(f'MALWARE DETECTED! "{target}" matched malware signature -> {sha256_hash} {fmt.pick_sad_face()}')
@@ -61,7 +74,7 @@ class Scanner:
 
 
 
-@click.command(no_args_is_help = True)
+@click.command(no_args_is_help = False)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
 @click.option("-f", "--file", help="The YARA rule file with which to scan", required=False)
 @click.option("-d", "--directory", help="The directory you wish to scan", default=".", required=False)
@@ -70,6 +83,7 @@ def main(version, file, directory) -> None:
 
     scanner = Scanner(directory, None)
     scanner.download_database()
+    scanner.scan_target()
      
 
 if __name__ == '__main__':
