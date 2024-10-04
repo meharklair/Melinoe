@@ -20,16 +20,22 @@ class Scanner:
         self.target_path = target_path
 
     def download_database(self):
-        log.info('Attempting to download database...')
+        log.info('Attempting to download database zip...')
+        
         start = time.perf_counter()
         urllib.request.urlretrieve("https://bazaar.abuse.ch/export/txt/sha256/full/","src\Database\database.zip")
-        end = time.perf_counter()
-        log.info(f'Download completed in {round(end - start, 9)} seconds!')
         self.unzip()
+        end = time.perf_counter()
+        
+        log.info(f'Download completed in {round(end - start, 9)} seconds!')
+
 
     def unzip(self):
+        log.info('Extracting database zip..')
         with zipfile.ZipFile('src\Database\database.zip', 'r') as zip_ref:
             zip_ref.extractall('src\Database')
+        log.info('Successfully extracted!!')
+            
             
     def compute_file_hash(self, file_path, algorithm='sha256'):
         """Compute the hash of a file using the specified algorithm."""
@@ -39,8 +45,9 @@ class Scanner:
         # Read the file in chunks of 8192 bytes
             while chunk := file.read(8192):
                 hash_func.update(chunk)
-    
         return hash_func.hexdigest()
+    
+    
     def scan_target(self):
         log.info('Beginning scan...')
         start = time.perf_counter()
@@ -54,6 +61,7 @@ class Scanner:
         end = time.perf_counter()
         log.info(f'Scan completed in {round(end - start, 9)} seconds!')
         log.misc('I am time itself. What are you?')
+        
         
     def scan_single(self, target):
         sha256_hash = self.compute_file_hash(target) + '\n'
