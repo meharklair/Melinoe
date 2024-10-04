@@ -3,6 +3,7 @@ import time
 import click
 import urllib.request
 import zipfile
+import hashlib
 from logging.logging import Logging, Formatting
 
 log = Logging()
@@ -42,9 +43,11 @@ class Scanner:
         log.misc('I am time itself. What are you?')
         
     def scan_single(self, target):
-        
-        for item in matches:
-            log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
+        sha256_hash = hashlib.sha256(target)
+        with open('database.txt','r') as file:
+            data_base = file.readlines()
+            if sha256_hash in data_base:
+                log.okay(f'MALWARE DETECTED! "{target}" matched malware signature -> {sha256_hash} {fmt.pick_sad_face()}')
 
     def scan_directory(self):
         # https://stackoverflow.com/questions/16953842/using-os-walk-to-recursively-traverse-directories-in-python
