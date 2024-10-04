@@ -5,6 +5,6 @@ Installation:
 
 pip install yara-python
 
-
+pip install click
 
 Possibly use some Ai tools like tensorfliw and Scikit-learn
