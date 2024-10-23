@@ -64,7 +64,6 @@ class Scanner:
         
         
     def scan_single(self, target):
-        print(target + '\n')
         sha256_hash = self.compute_file_hash(target) + '\n'
         with open("src\\Database\\full_sha256.txt",'r') as file:
             data_base = file.readlines()
