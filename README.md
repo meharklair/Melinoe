@@ -1,7 +1,7 @@
+# Melinoe
 <p align="center">
     <img src=![new](https://github.com/user-attachments/assets/12f63fdb-bfee-404a-afe1-f86ad76d1e91" />
 </p>
-# Melinoe
 ## Summary
 Melinoe is a malware scanning script that so far uses yar rules and a signature database to scan for malware in a specified directory or file.
 ## Future
