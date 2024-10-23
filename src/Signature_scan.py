@@ -31,7 +31,7 @@ class Scanner:
 
 
     def unzip(self):
-        log.info('Extracting database zip..')
+        log.info('Extracting zip...')
         with zipfile.ZipFile('src\Database\database.zip', 'r') as zip_ref:
             zip_ref.extractall('src\Database')
         log.info('Successfully extracted!!')

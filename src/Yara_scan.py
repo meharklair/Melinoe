@@ -44,8 +44,8 @@ class Scanner:
             log.warn('Target file or folder does not exist, exiting...')
             exit()
         end = time.perf_counter()
-        log.info(f'Scan completed in {round(end - start, 9)} seconds!')
         log.misc('I am time itself. What are you?')
+        log.info(f'Scan completed in {round(end - start, 9)} seconds!')
         
     def scan_single(self, target):
         matches = self.rules.match(target)
