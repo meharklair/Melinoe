@@ -1,6 +1,9 @@
 # Melinoe
 ## Summary
 Melinoe is a malware scanning script that so far uses yar rules and a signature database to scan for malware in a specified directory or file.
+## Future
+1. Adding a machine learning algortihm to detect malware based on signatures  
+2. a file monitoring system that can scan new files entering the system.
 ## Options
 | Option  | Description |
 | ------------- | ------------- |
@@ -9,14 +12,6 @@ Melinoe is a malware scanning script that so far uses yar rules and a signature 
 | -d, --directory TEXT |  The directory or file to scan. |
 | -s, --signature_scan | flag option to run a comparison against a signature database. |
 | --help | displays help message and exits. |
-
-
-
-
-
-
-
-
 
 Dependancies:
 pip install yara-python
