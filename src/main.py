@@ -17,11 +17,11 @@ current_version = "0.2.5"
 
 def main(version, file, directory, signature_scan) -> None:
     if version:
-        # fix this to not print banner twice
         fmt.print_version(current_version)
-
+        exit()
+        
+    fmt.print_banner(current_version)
     if file and directory:
-        fmt.print_banner(current_version)
         log.info(f'{Fore.GREEN}Beginning yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
         scanner = Yara_scan.Scanner(file, directory, None)
         scanner.compile_rules()
