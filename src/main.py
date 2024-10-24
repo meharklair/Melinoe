@@ -6,9 +6,9 @@ from colorama import Fore, Style
 
 log = Logging()
 fmt = Formatting()
-current_version = "0.2.5" 
+current_version = "0.3.0" 
 
-@click.command(no_args_is_help = True)
+@click.command(no_args_is_help = False)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
 @click.option("-f", "--file", help="The YARA rule file with which to scan", required=False)
 @click.option("-d", "--directory", help="The directory you wish to scan", default=".", required=False)
@@ -21,10 +21,18 @@ def main(version, file, directory, signature_scan) -> None:
         exit()
         
     fmt.print_banner(current_version)
+    
+    # default yara rules I made just cause!!!
+    log.info(f'{Fore.GREEN}Beginning default yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
+    scanner = Yara_scan.Scanner(None, directory, None)
+    scanner.compile_rules('.\injection_rules.yar')
+    scanner.scan_target()
+    
     if file and directory:
-        log.info(f'{Fore.GREEN}Beginning yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
-        scanner = Yara_scan.Scanner(file, directory, None)
-        scanner.compile_rules()
+        fmt.print_separator()
+        log.info(f'{Fore.GREEN}Beginning specified yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
+        scanner.rules_path = file
+        scanner.compile_rules(scanner.rules_path)
         scanner.scan_target()
 
     if directory and signature_scan:
