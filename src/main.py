@@ -4,15 +4,17 @@ import Yara_scan
 from logging.logging import Logging, Formatting
 from colorama import Fore, Style
 
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 log = Logging()
 fmt = Formatting()
 current_version = "0.3.0" 
 
-@click.command(no_args_is_help = False)
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
 @click.option("-f", "--file", help="The YARA rule file with which to scan", required=False)
 @click.option("-d", "--directory", help="The directory you wish to scan", default=".", required=False)
 @click.option("-s", "--signature_scan", is_flag=True, help="specify to run a comparison against a malware database", required=False)
+
 
 
 def main(version, file, directory, signature_scan) -> None:
