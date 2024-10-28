@@ -18,11 +18,11 @@ class Scanner:
         self.rules_path = rules_path
         self.target_path = target_path
 
-    def compile_rules(self):
+    def compile_rules(self, path):
         try:
-            log.info(f'Trying to compile YARA rules for \"{self.rules_path}\"... ٩(•̤̀ᵕ•̤́๑)ᵒᵏ')
+            log.info(f'Trying to compile YARA rules for \"{path}\"... ٩(•̤̀ᵕ•̤́๑)ᵒᵏ')
             start = time.perf_counter()
-            self.rules = yara.compile(self.rules_path)
+            self.rules = yara.compile(path)
             end = time.perf_counter()
             log.okay(f'YARA rules have successfully compiled in {round(end - start, 9)} seconds! ヽ(•‿•)ノ')
             log.misc('Time cannot be stopped...')

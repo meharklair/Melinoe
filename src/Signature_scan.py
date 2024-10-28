@@ -51,10 +51,12 @@ class Scanner:
     def scan_target(self):
         log.info('Beginning scan...')
         start = time.perf_counter()
+        with open("src\\Database\\full_sha256.txt",'r') as file:
+            database = file.readlines()
         if (os.path.isfile(self.target_path)):
-            self.scan_single(self.target_path)
+            self.scan_single(self.target_path, database)
         elif (os.path.isdir(self.target_path)):
-            self.scan_directory()
+            self.scan_directory(database)
         else:
             log.warn('Target file or folder does not exist, exiting...')
             exit()
@@ -63,14 +65,12 @@ class Scanner:
         log.misc('I am time itself. What are you?')
         
         
-    def scan_single(self, target):
+    def scan_single(self, target, database):
         sha256_hash = self.compute_file_hash(target) + '\n'
-        with open("src\\Database\\full_sha256.txt",'r') as file:
-            data_base = file.readlines()
-            if sha256_hash in data_base:
-                log.okay(f'MALWARE DETECTED! "{target}" matched malware signature -> {sha256_hash} {fmt.pick_sad_face()}')
+        if sha256_hash in database:
+            log.okay(f'MALWARE DETECTED! "{target}" matched malware signature -> {sha256_hash.strip()} {fmt.pick_sad_face()}')
 
-    def scan_directory(self):
+    def scan_directory(self, database):
         # https://stackoverflow.com/questions/16953842/using-os-walk-to-recursively-traverse-directories-in-python
         for root, dirs, files in os.walk(self.target_path):
             path = root.split(os.sep)
@@ -78,7 +78,7 @@ class Scanner:
             for file in files:
                # print(len(path) * '---', file)
                 full_path = os.path.join(root,file)
-                self.scan_single(full_path)
+                self.scan_single(full_path, database)
 
 
 
