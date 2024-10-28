@@ -7,7 +7,7 @@ from colorama import Fore, Style
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 log = Logging()
 fmt = Formatting()
-current_version = "0.3.0" 
+current_version = "0.3.2" 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
