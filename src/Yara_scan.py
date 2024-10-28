@@ -34,6 +34,7 @@ class Scanner:
             exit()
 
     def scan_target(self):
+        """Scans the target by either doing a single target scan or a direcotry scan."""
         log.info('Beginning scan...')
         start = time.perf_counter()
         if (os.path.isfile(self.target_path)):
@@ -53,12 +54,10 @@ class Scanner:
             log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
 
     def scan_directory(self):
-        # https://stackoverflow.com/questions/16953842/using-os-walk-to-recursively-traverse-directories-in-python
+        # Stack Overflow; User: Ajay; This code is for recursing through a directory
         for root, dirs, files in os.walk(self.target_path):
             path = root.split(os.sep)
-            # print((len(path) - 1) * '---', os.path.basename(root))
             for file in files:
-               # print(len(path) * '---', file)
                 full_path = os.path.join(root,file)
                 self.scan_single(full_path)
 

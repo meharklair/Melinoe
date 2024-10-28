@@ -4,6 +4,7 @@ import click
 import urllib.request
 import zipfile
 import hashlib
+import datetime
 from logging.logging import Logging, Formatting
 
 log = Logging()
@@ -21,34 +22,46 @@ class Scanner:
 
     def download_database(self):
         log.info('Attempting to download database zip...')
-        
         start = time.perf_counter()
-        urllib.request.urlretrieve("https://bazaar.abuse.ch/export/txt/sha256/full/","src\Database\database.zip")
+        urllib.request.urlretrieve("https://bazaar.abuse.ch/export/txt/sha256/full/","src\\Database\\database.zip")
         self.unzip()
         end = time.perf_counter()
-        
         log.info(f'Download completed in {round(end - start, 9)} seconds!')
 
+    def check_download(self):
+        """Checks if the file is older than the update time of the database"""
+        path = "src\\Database\\full_sha256.txt"
+        ti_m = os.path.getmtime(path)
+        mod_time = datetime.datetime.fromtimestamp(ti_m)
+        now = datetime.datetime.now()
+        # this is an hour because malware bazaar only updates their files once every hour
+        hour = datetime.timedelta(hours = 1)
+        time_diff = now - mod_time
+        if (time_diff < hour):
+             log.info('Database is up to date!')
+             log.info('Skipping download...')
+             return True
+        return False
+             
 
     def unzip(self):
         log.info('Extracting zip...')
-        with zipfile.ZipFile('src\Database\database.zip', 'r') as zip_ref:
-            zip_ref.extractall('src\Database')
+        with zipfile.ZipFile('src\\Database\\database.zip', 'r') as zip_ref:
+            zip_ref.extractall('src\\Database')
         log.info('Successfully extracted!!')
             
             
     def compute_file_hash(self, file_path, algorithm='sha256'):
         """Compute the hash of a file using the specified algorithm."""
         hash_func = hashlib.new(algorithm)
-    
         with open(file_path, 'rb') as file:
-        # Read the file in chunks of 8192 bytes
             while chunk := file.read(8192):
                 hash_func.update(chunk)
         return hash_func.hexdigest()
     
     
     def scan_target(self):
+        """Scans the target by either doing a single target scan or a direcotry scan."""
         log.info('Beginning scan...')
         start = time.perf_counter()
         with open("src\\Database\\full_sha256.txt",'r') as file:
@@ -71,12 +84,10 @@ class Scanner:
             log.okay(f'MALWARE DETECTED! "{target}" matched malware signature -> {sha256_hash.strip()} {fmt.pick_sad_face()}')
 
     def scan_directory(self, database):
-        # https://stackoverflow.com/questions/16953842/using-os-walk-to-recursively-traverse-directories-in-python
+        # Stack Overflow; User: Ajay; This code is for recursing through a directory
         for root, dirs, files in os.walk(self.target_path):
             path = root.split(os.sep)
-            # print((len(path) - 1) * '---', os.path.basename(root))
             for file in files:
-               # print(len(path) * '---', file)
                 full_path = os.path.join(root,file)
                 self.scan_single(full_path, database)
 

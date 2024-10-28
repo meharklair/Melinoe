@@ -9,7 +9,7 @@ class Formatting:
     
     @staticmethod
     def pick_sad_face() -> None:
-        faces = ['( ・⌓・｀)', '(つ﹏<。)', '( ཀ ʖ̯ ཀ)']
+        faces = ['( ・⌓・｀)', '(つ﹏<。)', '( ཀ ʖ̯ ཀ)', '(っ˘̩╭╮˘̩)っ', 'ಠ╭╮ಠ', '(╥_╥)']
         return random.choice(faces)
 
     @staticmethod

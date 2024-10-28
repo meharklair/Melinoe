@@ -42,7 +42,9 @@ def main(version, file, directory, signature_scan) -> None:
             fmt.print_separator()
         log.info(f'{Fore.GREEN}Beginning signature scan!! (•‿•){Style.RESET_ALL}')
         scanner = Signature_scan.Scanner(directory, None)
-        scanner.download_database()
+        up_to_date = scanner.check_download()
+        if not up_to_date:
+            scanner.download_database()
         scanner.scan_target()
 
     log.misc(f'{Fore.GREEN}All scans completed ⊂(▀¯▀⊂ ){Style.RESET_ALL}')
