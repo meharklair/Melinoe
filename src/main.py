@@ -1,4 +1,5 @@
 import click
+import os
 import Signature_scan
 import Yara_scan
 from logging.logging import Logging, Formatting
@@ -7,27 +8,33 @@ from colorama import Fore, Style
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 log = Logging()
 fmt = Formatting()
-current_version = "0.3.2" 
+current_version = "0.3.4" 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
 @click.option("-f", "--file", help="The YARA rule file with which to scan", required=False)
 @click.option("-d", "--directory", help="The directory you wish to scan", default=".", required=False)
 @click.option("-s", "--signature_scan", is_flag=True, help="specify to run a comparison against a malware database", required=False)
+@click.option("-o", "--output", is_flag=True, help="Outputs the results in a file", default=False, required=False)
 
 
-
-def main(version, file, directory, signature_scan) -> None:
+def main(version, file, directory, signature_scan, output) -> None:
     if version:
         fmt.print_version(current_version)
         exit()
         
     fmt.print_banner(current_version)
     
+    if output:
+        path = r'scan_results'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        output = True
+
     # default yara rules I made just cause!!!
     log.info(f'{Fore.GREEN}Beginning default yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
-    scanner = Yara_scan.Scanner(None, directory, None)
-    scanner.compile_rules('.\injection_rules.yar')
+    scanner = Yara_scan.Scanner(None, directory, None, output)
+    scanner.compile_rules('.\\injection_rules.yar')
     scanner.scan_target()
     
     if file and directory:
@@ -41,7 +48,7 @@ def main(version, file, directory, signature_scan) -> None:
         if file != None:
             fmt.print_separator()
         log.info(f'{Fore.GREEN}Beginning signature scan!! (•‿•){Style.RESET_ALL}')
-        scanner = Signature_scan.Scanner(directory, None)
+        scanner = Signature_scan.Scanner(directory, None, output)
         up_to_date = scanner.check_download()
         if not up_to_date:
             scanner.download_database()

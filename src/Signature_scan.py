@@ -16,9 +16,10 @@ class Scanner:
     Main scanning component of the program
     """
 
-    def __init__ (self, target_path, database):
+    def __init__ (self, target_path, database, write):
         self.database = database
-        self.target_path = target_path
+        self.target_path = target_paths
+        self.write = write
 
     def download_database(self):
         log.info('Attempting to download database zip...')

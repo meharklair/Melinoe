@@ -13,10 +13,11 @@ class Scanner:
     Main scanning component of the program
     """
 
-    def __init__ (self, rules_path, target_path, rules):
+    def __init__ (self, rules_path, target_path, rules, write):
         self.rules = rules
         self.rules_path = rules_path
         self.target_path = target_path
+        self.write = write
 
     def compile_rules(self, path):
         try:
@@ -48,12 +49,13 @@ class Scanner:
         end = time.perf_counter()
         log.misc('I am time itself. What are you?')
         log.info(f'Scan completed in {round(end - start, 9)} seconds!')
-        
     def scan_single(self, target):
         matches = self.rules.match(target)
+        f = open("scan_results\\results.txt", "a",  encoding="utf-8")
         for item in matches:
-            if target != self.rules_path:
-                log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
+            f.write(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()} \n')
+            log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
+        f.close()
 
     def scan_directory(self):
         # Stack Overflow; User: Ajay; This code is for recursing through a directory
