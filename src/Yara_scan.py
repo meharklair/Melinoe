@@ -22,6 +22,7 @@ class Scanner:
         try:
             log.info(f'Trying to compile YARA rules for \"{path}\"... ٩(•̤̀ᵕ•̤́๑)ᵒᵏ')
             start = time.perf_counter()
+            self.rules_path = path
             self.rules = yara.compile(path)
             end = time.perf_counter()
             log.okay(f'YARA rules have successfully compiled in {round(end - start, 9)} seconds! ヽ(•‿•)ノ')
@@ -51,7 +52,8 @@ class Scanner:
     def scan_single(self, target):
         matches = self.rules.match(target)
         for item in matches:
-            log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
+            if target != self.rules_path:
+                log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
 
     def scan_directory(self):
         # Stack Overflow; User: Ajay; This code is for recursing through a directory
