@@ -25,13 +25,14 @@ def main(version, file, directory, signature_scan, output) -> None:
         
     fmt.print_banner(current_version)
     
-    if output:
-        path = r'scan_results'
-        if not os.path.exists(path):
-            os.makedirs(path)
-        output = True
-
+    create_output_files(output)
     # default yara rules I made just cause!!!
+    if output:
+        # gotta be a better way to do this
+        f = open("scan_results\\results.txt", "a",  encoding="utf-8")
+        f.write(f'Beginning default yara scan!! ╰ (´꒳`) ╯\n')
+        f.close()
+
     log.info(f'{Fore.GREEN}Beginning default yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
     scanner = Yara_scan.Scanner(None, directory, None, output)
     scanner.compile_rules('.\\injection_rules.yar')
@@ -39,6 +40,13 @@ def main(version, file, directory, signature_scan, output) -> None:
     
     if file and directory:
         fmt.print_separator()
+
+        if output:
+            f = open("scan_results\\results.txt", "a",  encoding="utf-8")
+            fmt.write_separator(f)
+            f.write(f'Beginning specified yara scan!! ╰ (´꒳`) ╯\n')
+            f.close()
+            
         log.info(f'{Fore.GREEN}Beginning specified yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
         scanner.rules_path = file
         scanner.compile_rules(scanner.rules_path)
@@ -57,6 +65,13 @@ def main(version, file, directory, signature_scan, output) -> None:
     log.misc(f'{Fore.GREEN}All scans completed ⊂(▀¯▀⊂ ){Style.RESET_ALL}')
     log.misc('Return to shadow, now!')
 
+def create_output_files(output):
+    file = r'scan_results\\results.txt'
+    path = r'scan_results'
+    if not os.path.exists(path):
+        os.makedirs(path)
+    if os.path.exists(file):
+        os.remove(file)
 
 if __name__ == '__main__':
     main()
