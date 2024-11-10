@@ -1,0 +1,5 @@
+click==8.1.7
+colorama==0.4.6
+yara-python==4.5.1
+urllib3==2.1.0
+requests==2.31.0
