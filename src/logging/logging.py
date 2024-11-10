@@ -9,7 +9,7 @@ class Formatting:
     
     @staticmethod
     def pick_sad_face() -> None:
-        faces = ['( ・⌓・｀)', '(つ﹏<。)', '( ཀ ʖ̯ ཀ)']
+        faces = ['( ・⌓・｀)', '(つ﹏<。)', '( ཀ ʖ̯ ཀ)', '(っ˘̩╭╮˘̩)っ', 'ಠ╭╮ಠ', '(╥_╥)']
         return random.choice(faces)
 
     @staticmethod
@@ -35,6 +35,10 @@ class Formatting:
     @staticmethod
     def print_separator() -> None:
         print('----------------------------------------------------------------------------------------------------------------------------------')
+    @staticmethod
+    def write_separator(file) -> None:
+        file.write('----------------------------------------------------------------------------------------------------------------------------------\n')
+
 
 class Logging:
     """
