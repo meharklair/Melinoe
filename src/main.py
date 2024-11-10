@@ -8,7 +8,7 @@ from colorama import Fore, Style
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 log = Logging()
 fmt = Formatting()
-current_version = "0.3.4" 
+current_version = "0.5.0" 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
@@ -24,8 +24,8 @@ def main(version, file, directory, signature_scan, output) -> None:
         exit()
         
     fmt.print_banner(current_version)
-    
-    create_output_files(output)
+    if output:
+        create_output_files(output)
     # default yara rules I made just cause!!!
     if output:
         # gotta be a better way to do this
@@ -53,8 +53,12 @@ def main(version, file, directory, signature_scan, output) -> None:
         scanner.scan_target()
 
     if directory and signature_scan:
-        if file != None:
-            fmt.print_separator()
+        fmt.print_separator()
+        if output:
+            f = open("scan_results\\results.txt", "a",  encoding="utf-8")
+            fmt.write_separator(f)
+            f.write(f'Beginning signature scan!! (•‿•)\n')
+            f.close()    
         log.info(f'{Fore.GREEN}Beginning signature scan!! (•‿•){Style.RESET_ALL}')
         scanner = Signature_scan.Scanner(directory, None, output)
         up_to_date = scanner.check_download()

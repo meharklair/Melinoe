@@ -48,7 +48,12 @@ class Scanner:
             log.warn('Target file or folder does not exist, exiting...')
             exit()
         end = time.perf_counter()
-        print(counter)
+        if counter == 0:
+            log.info('No Malware Found (＾▽＾)!!!!')
+            if self.write:
+                f = open("scan_results\\results.txt", "a",  encoding="utf-8")
+                f.write('No Malware Found (＾▽＾)!!!!\n')
+                f.close()
         log.misc('I am time itself. What are you?')
         log.info(f'Scan completed in {round(end - start, 9)} seconds!')
 
@@ -57,12 +62,13 @@ class Scanner:
     def scan_single(self, target, counter):
         matches = self.rules.match(target)
         counter += len(matches)
-        f = open("scan_results\\results.txt", "a",  encoding="utf-8")
         for item in matches:
-            if self.write:
-                f.write(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()} \n')
-            log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
-        f.close()
+            if target != self.rules_path:
+                if self.write:
+                    f = open("scan_results\\results.txt", "a",  encoding="utf-8")
+                    f.write(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}\n')
+                    f.close()
+                log.okay(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}')
 
         return counter
 
