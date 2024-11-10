@@ -14,6 +14,9 @@ Melinoe is a malware scanning script that so far uses yara rules and a signature
 | -o, --output | Outputs the results to a file. |
 | -h, --help | displays help message and exits. |
 ## Dependancies
-pip install yara-python <br/>
-pip install click <br/>
-pip install colorama <br/>
+pip install yara-python
+
+pip install click
+
+pip install colorama
+
