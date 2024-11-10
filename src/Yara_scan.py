@@ -49,7 +49,7 @@ class Scanner:
             exit()
         end = time.perf_counter()
         if counter == 0:
-            log.info('No Malware Found (＾▽＾)!!!!')
+            log.okay('No Malware Found (＾▽＾)!!!!')
             if self.write:
                 f = open("scan_results\\results.txt", "a",  encoding="utf-8")
                 f.write('No Malware Found (＾▽＾)!!!!\n')
@@ -61,9 +61,12 @@ class Scanner:
 
     def scan_single(self, target, counter):
         matches = self.rules.match(target)
-        counter += len(matches)
+        # for checking if the target is the yara rule file
+        target_file = target.split("\\")
+        rule_file = self.rules_path.split("\\")
         for item in matches:
-            if target != self.rules_path:
+            if target_file[-1] != rule_file[-1]:
+                counter += len(matches)
                 if self.write:
                     f = open("scan_results\\results.txt", "a",  encoding="utf-8")
                     f.write(f'MALWARE DETECTED! "{target}" -> {item} {fmt.pick_sad_face()}\n')
