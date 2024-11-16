@@ -35,7 +35,7 @@ def main(version, file, directory, signature_scan, output) -> None:
 
     log.info(f'{Fore.GREEN}Beginning default yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
     scanner = Yara_scan.Scanner(None, directory, None, output)
-    scanner.compile_rules('.\\injection_rules.yar')
+    scanner.compile_rules('Rules\\injection_rules.yar')
     scanner.scan_target()
     
     if file and directory:

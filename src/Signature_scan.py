@@ -24,14 +24,16 @@ class Scanner:
     def download_database(self):
         log.info('Attempting to download database zip...')
         start = time.perf_counter()
-        urllib.request.urlretrieve("https://bazaar.abuse.ch/export/txt/sha256/full/","src\\Database\\database.zip")
+        urllib.request.urlretrieve("https://bazaar.abuse.ch/export/txt/sha256/full/","Database\\database.zip")
         self.unzip()
         end = time.perf_counter()
         log.info(f'Download completed in {round(end - start, 9)} seconds!')
 
     def check_download(self):
         """Checks if the file is older than the update time of the database"""
-        path = "src\\Database\\full_sha256.txt"
+        path = "Database\\full_sha256.txt"
+        if not os.path.exists(path):
+            return False
         ti_m = os.path.getmtime(path)
         mod_time = datetime.datetime.fromtimestamp(ti_m)
         now = datetime.datetime.now()
@@ -47,8 +49,8 @@ class Scanner:
 
     def unzip(self):
         log.info('Extracting zip...')
-        with zipfile.ZipFile('src\\Database\\database.zip', 'r') as zip_ref:
-            zip_ref.extractall('src\\Database')
+        with zipfile.ZipFile('Database\\database.zip', 'r') as zip_ref:
+            zip_ref.extractall('Database')
         log.info('Successfully extracted!!')
             
             
@@ -66,7 +68,7 @@ class Scanner:
         counter = 0
         log.info('Beginning scan...')
         start = time.perf_counter()
-        with open("src\\Database\\full_sha256.txt",'r') as file:
+        with open("Database\\full_sha256.txt",'r') as file:
             database = file.readlines()
         if (os.path.isfile(self.target_path)):
            counter = self.scan_single(self.target_path, database, counter)
