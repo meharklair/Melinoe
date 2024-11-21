@@ -9,16 +9,16 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 log = Logging()
 fmt = Formatting()
 current_version = "0.5.0" 
-
-@click.command(context_settings=CONTEXT_SETTINGS)
+@click.command(context_settings=CONTEXT_SETTINGS, no_args_is_help = True)
 @click.option("-v", "--version", is_flag=True, help="The current version.", required=False)
 @click.option("-f", "--file", help="The YARA rule file with which to scan", required=False)
+@click.option("-df", "--default", is_flag=True, help="Runs a default scan with creator made yara rules (really barebones right now)", default=False, required=False)
 @click.option("-d", "--directory", help="The directory you wish to scan", default=".", required=False)
 @click.option("-s", "--signature_scan", is_flag=True, help="specify to run a comparison against a malware database", required=False)
 @click.option("-o", "--output", is_flag=True, help="Outputs the results in a file", default=False, required=False)
 
 
-def main(version, file, directory, signature_scan, output) -> None:
+def main(version, file, default, directory, signature_scan, output) -> None:
     if version:
         fmt.print_version(current_version)
         exit()
@@ -32,11 +32,12 @@ def main(version, file, directory, signature_scan, output) -> None:
         f = open("scan_results\\results.txt", "a",  encoding="utf-8")
         f.write(f'Beginning default yara scan!! ╰ (´꒳`) ╯\n')
         f.close()
-
-    log.info(f'{Fore.GREEN}Beginning default yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
-    scanner = Yara_scan.Scanner(None, directory, None, output)
-    scanner.compile_rules('Rules\\injection_rules.yar')
-    scanner.scan_target()
+        
+    if default:
+        log.info(f'{Fore.GREEN}Beginning default yara scan!! ╰ (´꒳`) ╯{Style.RESET_ALL}')
+        scanner = Yara_scan.Scanner(None, directory, None, output)
+        scanner.compile_rules('Rules\\injection_rules.yar')
+        scanner.scan_target()
     
     if file and directory:
         fmt.print_separator()

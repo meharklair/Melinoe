@@ -28,7 +28,6 @@ class Formatting:
         v{version}{Style.RESET_ALL}
         """
         print(banner)
-        print('----------------------------------------------------------------------------------------------------------------------------------')
     @staticmethod
     def print_version(version: str) -> None:
         print(f'v{version}')
