@@ -26,5 +26,10 @@ And last of all make sure you are in the src directory.
 | -d, --directory TEXT |  The directory or file to scan. |
 | -s, --signature_scan | flag option to run a comparison against a signature database. |
 | -o, --output | Outputs the results to a file. |
+| -df, --default | runs a default yara scan with rules I made (really barebones) |
 | -h, --help | displays help message and exits. |
 # Demo
+short example video:
+
+https://github.com/user-attachments/assets/809af5be-bef8-4b50-98ad-d5e9afcb9bfd
+
